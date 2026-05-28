@@ -16,14 +16,14 @@
 body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;}
 .app{max-width:600px;margin:0 auto;padding-bottom:80px;}
 .header{background:var(--green);padding:18px 16px 14px;position:relative;overflow:hidden;}
-.header::before{content:'⚽';position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.1;transform:rotate(20deg);pointer-events:none;}
+.header::before{content:'x';position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.1;transform:rotate(20deg);pointer-events:none;}
 .header h1{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;line-height:1;}
 .header p{font-size:12px;color:rgba(255,255,255,0.7);margin-top:3px;}
 .header-meta{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
 .meta-pill{background:rgba(0,0,0,0.25);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.9);font-weight:500;}
 .trophy-tap{cursor:pointer;user-select:none;}
 .tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
-.tab{flex:1;padding:11px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.3px;}
+.tab{flex:1;padding:11px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;text-transform:uppercase;}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 .panel{display:none;padding:14px;}
 .panel.active{display:block;}
@@ -32,11 +32,9 @@ body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;
 .empty-state{text-align:center;padding:28px 16px;color:var(--muted);font-size:13px;}
 input[type=text],input[type=number],input[type=password]{background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;color:var(--white);padding:8px 10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;width:100%;}
 input:focus{border-color:var(--gl);}
-.input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
 .btn{padding:9px 16px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
 .btn:active{transform:scale(0.97);}
 .btn-green{background:var(--gl);color:#fff;}
-.btn-green:hover{background:#28b85c;}
 .btn-gold{background:var(--gold);color:#1a1a00;}
 .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
 .btn-ghost:hover{border-color:rgba(255,255,255,0.2);color:var(--white);}
@@ -49,7 +47,6 @@ input:focus{border-color:var(--gl);}
 .cost-label{font-size:11px;color:var(--muted);}
 .slot-counter{display:flex;align-items:center;gap:12px;justify-content:center;margin:12px 0;}
 .counter-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,0.06);color:var(--white);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.counter-btn:active{transform:scale(0.9);}
 .counter-val{font-family:'Bebas Neue',sans-serif;font-size:32px;min-width:40px;text-align:center;}
 .confirm-box{background:rgba(26,122,60,0.2);border:1px solid var(--gl);border-radius:10px;padding:16px;text-align:center;margin-top:12px;display:none;}
 .confirm-box h3{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);margin-bottom:6px;}
@@ -67,7 +64,7 @@ input:focus{border-color:var(--gl);}
 .paid-yes{background:rgba(26,122,60,0.3);color:#4dcc7a;}
 .paid-no{background:rgba(224,60,45,0.2);color:#f47066;}
 .drum{background:rgba(0,0,0,0.3);border:2px solid var(--green);border-radius:10px;padding:20px;text-align:center;margin-bottom:12px;min-height:76px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.drum-team{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);letter-spacing:2px;line-height:1;}
+.drum-team{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);line-height:1;}
 .drum-sub{font-size:12px;color:var(--muted);margin-top:4px;}
 .spin{animation:spn 0.08s infinite;}
 @keyframes spn{0%,100%{opacity:1;}50%{opacity:0.2;}}
@@ -124,577 +121,592 @@ input:focus{border-color:var(--gl);}
 
 <div class="overlay hidden" id="pw-modal">
   <div class="modal">
-    <h2>🔐 Admin</h2>
+    <h2>Admin</h2>
     <p>Enter the admin password</p>
-    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()"/>
+    <input type="password" id="pw-input" placeholder="Password"/>
     <div class="modal-btns">
-      <button class="btn btn-ghost btn-full" onclick="closePw()">Cancel</button>
-      <button class="btn btn-gold btn-full" onclick="checkPw()">Enter</button>
+      <button class="btn btn-ghost btn-full" id="pw-cancel">Cancel</button>
+      <button class="btn btn-gold btn-full" id="pw-enter">Enter</button>
     </div>
   </div>
 </div>
 
 <div class="app" id="main-app">
-
   <div class="header">
-    <h1><span class="trophy-tap" id="trophy" onclick="trophyTap()">🏆</span> WC 2026 Sweepstake</h1>
-    <p>USA · Mexico · Canada — 11 Jun to 19 Jul 2026</p>
+    <h1><span class="trophy-tap" id="trophy">&#127942; WC 2026 Sweepstake</span></h1>
+    <p>USA &middot; Mexico &middot; Canada &mdash; 11 Jun to 19 Jul 2026</p>
     <div class="header-meta">
-      <span class="meta-pill" id="hdr-pot">Pot: £0</span>
+      <span class="meta-pill" id="hdr-pot">Pot: &pound;0</span>
       <span class="meta-pill" id="hdr-slots">48 slots left</span>
       <span class="meta-pill" id="hdr-players">0 players</span>
     </div>
   </div>
 
   <div class="tabs">
-    <div class="tab active" id="tab-join"   onclick="go('join')">📋 Join</div>
-    <div class="tab"       id="tab-prizes" onclick="go('prizes')">🏅 Prizes</div>
-    <div class="tab"       id="tab-live"   onclick="go('live')">📊 Live</div>
-    <div class="tab"       id="tab-board"  onclick="go('board')">👥 Board</div>
-    <div class="tab hidden" id="tab-admin" onclick="go('admin')">⚙️ Admin</div>
+    <div class="tab active" id="tab-join">&#128203; Join</div>
+    <div class="tab" id="tab-prizes">&#127941; Prizes</div>
+    <div class="tab" id="tab-live">&#128202; Live</div>
+    <div class="tab" id="tab-board">&#128101; Board</div>
+    <div class="tab hidden" id="tab-admin">&#9881; Admin</div>
   </div>
 
-  <!-- JOIN -->
   <div class="panel active" id="panel-join">
-    <div class="db-error" id="db-error">⚠️ Could not connect to database. Please refresh and try again.</div>
+    <div class="db-error" id="db-error">Could not connect to database. Please refresh and try again.</div>
     <div class="section-title">Grab Your Slot</div>
     <div class="slots-remaining">
       <div class="slots-big" id="slots-left">48</div>
-      <div class="slots-label">slots remaining out of 48 · £5 each</div>
+      <div class="slots-label">slots remaining out of 48 &middot; &pound;5 each</div>
     </div>
     <div class="card">
       <div style="font-size:13px;color:var(--muted);margin-bottom:10px;">Your name</div>
       <input type="text" id="reg-name" placeholder="Enter your name" style="margin-bottom:14px;"/>
       <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">How many slots?</div>
       <div class="slot-counter">
-        <button class="counter-btn" onclick="adjSlots(-1)">−</button>
+        <button class="counter-btn" id="btn-minus">&#8722;</button>
         <div class="counter-val" id="slot-count">1</div>
-        <button class="counter-btn" onclick="adjSlots(1)">+</button>
+        <button class="counter-btn" id="btn-plus">&#43;</button>
       </div>
       <div class="cost-display">
-        <div class="cost-big" id="cost-display">£5</div>
-        <div class="cost-label">total to pay · bank transfer to Peter</div>
+        <div class="cost-big" id="cost-display">&pound;5</div>
+        <div class="cost-label">total to pay &middot; bank transfer to Peter</div>
       </div>
-      <button class="btn btn-green btn-full" style="margin-top:6px;padding:12px;" onclick="register()" id="reg-btn">Reserve My Slot(s) →</button>
+      <button class="btn btn-green btn-full" id="reg-btn" style="margin-top:6px;padding:12px;">Reserve My Slot(s) &rarr;</button>
     </div>
     <div class="confirm-box" id="confirm-box">
-      <h3>🎉 You're In!</h3>
+      <h3>You're In!</h3>
       <div id="confirm-msg" style="font-size:13px;color:var(--muted);line-height:1.6;"></div>
     </div>
   </div>
 
-  <!-- PRIZES -->
   <div class="panel" id="panel-prizes">
     <div class="section-title">Prize Breakdown</div>
     <div class="pot-bar">
-      <div><div class="pot-label">Total pot</div><div class="pot-val">£240</div></div>
-      <div style="text-align:right"><div class="pot-label">Per slot</div><div class="pot-val" style="font-size:18px;">£5</div></div>
+      <div><div class="pot-label">Total pot</div><div class="pot-val">&pound;240</div></div>
+      <div style="text-align:right"><div class="pot-label">Per slot</div><div class="pot-val" style="font-size:18px;">&pound;5</div></div>
     </div>
     <div class="prize-list" id="prize-list"></div>
   </div>
 
-  <!-- LIVE -->
   <div class="panel" id="panel-live">
     <div id="live-content"></div>
   </div>
 
-  <!-- BOARD -->
   <div class="panel" id="panel-board">
     <div class="section-title">Who's Got What</div>
     <div class="pot-bar">
-      <div><div class="pot-label">Collected so far</div><div class="pot-val" id="board-collected">£0</div></div>
-      <div style="text-align:right"><div class="pot-label">Prize pot</div><div class="pot-val" style="font-size:18px;">£240</div></div>
+      <div><div class="pot-label">Collected so far</div><div class="pot-val" id="board-collected">&pound;0</div></div>
+      <div style="text-align:right"><div class="pot-label">Prize pot</div><div class="pot-val" style="font-size:18px;">&pound;240</div></div>
     </div>
     <div id="board-list"><div class="empty-state">Loading...</div></div>
   </div>
 
-  <!-- ADMIN -->
   <div class="panel hidden" id="panel-admin">
-    <div class="section-title">💰 Payments</div>
+    <div class="section-title">Payments</div>
     <div class="pay-stats">
-      <div class="pay-stat"><div class="pay-stat-val yv" id="a-pot">£0</div><div class="pay-stat-label">Collected</div></div>
+      <div class="pay-stat"><div class="pay-stat-val yv" id="a-pot">&pound;0</div><div class="pay-stat-label">Collected</div></div>
       <div class="pay-stat"><div class="pay-stat-val gv" id="a-paid">0</div><div class="pay-stat-label">Paid slots</div></div>
       <div class="pay-stat"><div class="pay-stat-val rv" id="a-owed">0</div><div class="pay-stat-label">Owed slots</div></div>
     </div>
     <div class="card" style="padding:10px;">
       <div class="player-list" id="admin-player-list"><div class="empty-state">No players yet</div></div>
     </div>
-    <div class="section-title" style="margin-top:4px;">🎲 Draw</div>
+    <div class="section-title" style="margin-top:4px;">Draw</div>
     <div class="drum" id="drum"><div style="color:var(--muted);font-size:13px;">Run the draw to assign teams to slots</div></div>
     <div style="display:flex;gap:8px;margin-bottom:12px;">
-      <button class="btn btn-gold" style="flex:2;" onclick="runDraw()">🎲 Draw All Teams</button>
-      <button class="btn btn-ghost" style="flex:1;" onclick="resetDraw()">↺ Reset</button>
+      <button class="btn btn-gold" style="flex:2;" id="draw-btn">Draw All Teams</button>
+      <button class="btn btn-ghost" style="flex:1;" id="reset-btn">Reset</button>
     </div>
     <div class="draw-grid" id="draw-grid"></div>
-    <div class="section-title" style="margin-top:12px;">🏅 Prize Winners</div>
+    <div class="section-title" style="margin-top:12px;">Prize Winners</div>
     <div class="card">
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">Fill in as the tournament progresses</div>
       <div id="prize-inputs"></div>
     </div>
   </div>
-
 </div>
 
 <script>
-const SB_URL = 'https://mdvffowkupqivkcoxity.supabase.co';
-const SB_KEY = 'sb_publishable_moR9FRoQ2v5WlSQKmDynhA_uxT85FdJ';
-const FD_KEY = '69719b7e7f5b4b31b034971f970248e1';
-const ADMIN_PW = 'Three lions';
+var SB_URL = 'https://mdvffowkupqivkcoxity.supabase.co';
+var SB_KEY = 'sb_publishable_moR9FRoQ2v5WlSQKmDynhA_uxT85FdJ';
+var FD_KEY = '69719b7e7f5b4b31b034971f970248e1';
+var ADMIN_PW = 'Three lions';
 
-const TEAMS = [
-  {n:"Mexico",f:"🇲🇽",g:"A"},{n:"South Korea",f:"🇰🇷",g:"A"},{n:"South Africa",f:"🇿🇦",g:"A"},{n:"Czechia",f:"🇨🇿",g:"A"},
-  {n:"Canada",f:"🇨🇦",g:"B"},{n:"Switzerland",f:"🇨🇭",g:"B"},{n:"Qatar",f:"🇶🇦",g:"B"},{n:"Bosnia & Herz.",f:"🇧🇦",g:"B"},
-  {n:"Brazil",f:"🇧🇷",g:"C"},{n:"Morocco",f:"🇲🇦",g:"C"},{n:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",g:"C"},{n:"Haiti",f:"🇭🇹",g:"C"},
-  {n:"USA",f:"🇺🇸",g:"D"},{n:"Paraguay",f:"🇵🇾",g:"D"},{n:"Australia",f:"🇦🇺",g:"D"},{n:"Türkiye",f:"🇹🇷",g:"D"},
-  {n:"Germany",f:"🇩🇪",g:"E"},{n:"Ecuador",f:"🇪🇨",g:"E"},{n:"Ivory Coast",f:"🇨🇮",g:"E"},{n:"Curaçao",f:"🇨🇼",g:"E"},
-  {n:"Netherlands",f:"🇳🇱",g:"F"},{n:"Japan",f:"🇯🇵",g:"F"},{n:"Tunisia",f:"🇹🇳",g:"F"},{n:"Sweden",f:"🇸🇪",g:"F"},
-  {n:"Belgium",f:"🇧🇪",g:"G"},{n:"Iran",f:"🇮🇷",g:"G"},{n:"Egypt",f:"🇪🇬",g:"G"},{n:"New Zealand",f:"🇳🇿",g:"G"},
-  {n:"Spain",f:"🇪🇸",g:"H"},{n:"Uruguay",f:"🇺🇾",g:"H"},{n:"Saudi Arabia",f:"🇸🇦",g:"H"},{n:"Cape Verde",f:"🇨🇻",g:"H"},
-  {n:"France",f:"🇫🇷",g:"I"},{n:"Senegal",f:"🇸🇳",g:"I"},{n:"Norway",f:"🇳🇴",g:"I"},{n:"Iraq",f:"🇮🇶",g:"I"},
-  {n:"Argentina",f:"🇦🇷",g:"J"},{n:"Algeria",f:"🇩🇿",g:"J"},{n:"Austria",f:"🇦🇹",g:"J"},{n:"Jordan",f:"🇯🇴",g:"J"},
-  {n:"Portugal",f:"🇵🇹",g:"K"},{n:"Colombia",f:"🇨🇴",g:"K"},{n:"Uzbekistan",f:"🇺🇿",g:"K"},{n:"DR Congo",f:"🇨🇩",g:"K"},
-  {n:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",g:"L"},{n:"Croatia",f:"🇭🇷",g:"L"},{n:"Ghana",f:"🇬🇭",g:"L"},{n:"Panama",f:"🇵🇦",g:"L"}
+var TEAMS = [
+  {n:'Mexico',f:'MX',g:'A'},{n:'South Korea',f:'KR',g:'A'},{n:'South Africa',f:'ZA',g:'A'},{n:'Czechia',f:'CZ',g:'A'},
+  {n:'Canada',f:'CA',g:'B'},{n:'Switzerland',f:'CH',g:'B'},{n:'Qatar',f:'QA',g:'B'},{n:'Bosnia & Herz.',f:'BA',g:'B'},
+  {n:'Brazil',f:'BR',g:'C'},{n:'Morocco',f:'MA',g:'C'},{n:'Scotland',f:'GB',g:'C'},{n:'Haiti',f:'HT',g:'C'},
+  {n:'USA',f:'US',g:'D'},{n:'Paraguay',f:'PY',g:'D'},{n:'Australia',f:'AU',g:'D'},{n:'Turkey',f:'TR',g:'D'},
+  {n:'Germany',f:'DE',g:'E'},{n:'Ecuador',f:'EC',g:'E'},{n:'Ivory Coast',f:'CI',g:'E'},{n:'Curacao',f:'CW',g:'E'},
+  {n:'Netherlands',f:'NL',g:'F'},{n:'Japan',f:'JP',g:'F'},{n:'Tunisia',f:'TN',g:'F'},{n:'Sweden',f:'SE',g:'F'},
+  {n:'Belgium',f:'BE',g:'G'},{n:'Iran',f:'IR',g:'G'},{n:'Egypt',f:'EG',g:'G'},{n:'New Zealand',f:'NZ',g:'G'},
+  {n:'Spain',f:'ES',g:'H'},{n:'Uruguay',f:'UY',g:'H'},{n:'Saudi Arabia',f:'SA',g:'H'},{n:'Cape Verde',f:'CV',g:'H'},
+  {n:'France',f:'FR',g:'I'},{n:'Senegal',f:'SN',g:'I'},{n:'Norway',f:'NO',g:'I'},{n:'Iraq',f:'IQ',g:'I'},
+  {n:'Argentina',f:'AR',g:'J'},{n:'Algeria',f:'DZ',g:'J'},{n:'Austria',f:'AT',g:'J'},{n:'Jordan',f:'JO',g:'J'},
+  {n:'Portugal',f:'PT',g:'K'},{n:'Colombia',f:'CO',g:'K'},{n:'Uzbekistan',f:'UZ',g:'K'},{n:'DR Congo',f:'CD',g:'K'},
+  {n:'England',f:'GB',g:'L'},{n:'Croatia',f:'HR',g:'L'},{n:'Ghana',f:'GH',g:'L'},{n:'Panama',f:'PA',g:'L'}
 ];
 
-const PRIZES = [
-  {id:"winner",ic:"🥇",name:"Champion",desc:"Team wins the World Cup",amt:80},
-  {id:"runner",ic:"🥈",name:"Nearly Men",desc:"Team reaches the final",amt:45},
-  {id:"third",ic:"🥉",name:"Bronze Ballers",desc:"Team finishes third",amt:25},
-  {id:"boot",ic:"⚽",name:"Boot Camp",desc:"Your team's player wins Golden Boot",amt:20},
-  {id:"concede",ic:"🤦",name:"Leaky Pipes",desc:"Most goals conceded across tournament",amt:15},
-  {id:"saves",ic:"🧤",name:"Shot Stopper",desc:"Most saves by a goalkeeper",amt:15},
-  {id:"redcards",ic:"🔴",name:"Dirtiest Dogs",desc:"Most red cards across all games",amt:10},
-  {id:"margin",ic:"🎯",name:"Absolute Hammering",desc:"Biggest winning margin in a single game",amt:10},
-  {id:"firstgoal",ic:"🚀",name:"Off the Blocks",desc:"Team scores the first goal of the tournament",amt:10},
-  {id:"qualify",ic:"🏆",name:"Top of the Class",desc:"First team to qualify from the group stage",amt:5},
-  {id:"eliminated",ic:"💀",name:"Early Bath",desc:"First team eliminated from the tournament",amt:5},
+var PRIZES = [
+  {id:'winner',ic:'1st',name:'Champion',desc:'Team wins the World Cup',amt:80},
+  {id:'runner',ic:'2nd',name:'Nearly Men',desc:'Team reaches the final',amt:45},
+  {id:'third',ic:'3rd',name:'Bronze Ballers',desc:'Team finishes third',amt:25},
+  {id:'boot',ic:'Gol',name:'Boot Camp',desc:'Your team\'s player wins Golden Boot',amt:20},
+  {id:'concede',ic:'Lk',name:'Leaky Pipes',desc:'Most goals conceded across tournament',amt:15},
+  {id:'saves',ic:'GK',name:'Shot Stopper',desc:'Most saves by a goalkeeper',amt:15},
+  {id:'redcards',ic:'Red',name:'Dirtiest Dogs',desc:'Most red cards across all games',amt:10},
+  {id:'margin',ic:'5-0',name:'Absolute Hammering',desc:'Biggest winning margin in a single game',amt:10},
+  {id:'firstgoal',ic:'1st!',name:'Off the Blocks',desc:'Team scores the first goal of the tournament',amt:10},
+  {id:'qualify',ic:'Top',name:'Top of the Class',desc:'First team to qualify from the group stage',amt:5},
+  {id:'eliminated',ic:'Out',name:'Early Bath',desc:'First team eliminated from the tournament',amt:5}
 ];
 
-let players=[], draw=[], prizeWinners={}, drawDone=false;
-let isAdmin=false, tapCount=0, tapTimer=null, wantedSlots=1;
-let dbOk=false;
+var players = [];
+var draw = [];
+var prizeWinners = {};
+var drawDone = false;
+var isAdmin = false;
+var tapCount = 0;
+var tapTimer = null;
+var wantedSlots = 1;
 
-// ── SUPABASE ──────────────────────────────────────────────
-async function sbFetch(path, method='GET', body=null){
-  const headers = {
+function sbFetch(path, method, body) {
+  method = method || 'GET';
+  var headers = {
     'apikey': SB_KEY,
     'Authorization': 'Bearer ' + SB_KEY,
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   };
-  if(method==='POST') headers['Prefer'] = 'resolution=merge-duplicates,return=representation';
-  if(method==='PATCH') headers['Prefer'] = 'return=representation';
-
-  const opts = { method, headers };
-  if(body) opts.body = JSON.stringify(body);
-
-  const res = await fetch(SB_URL + '/rest/v1/' + path, opts);
-  if(!res.ok){
-    const txt = await res.text();
-    throw new Error(`${res.status}: ${txt}`);
-  }
-  const txt = await res.text();
-  return txt ? JSON.parse(txt) : null;
+  if (method === 'POST') headers['Prefer'] = 'resolution=merge-duplicates,return=representation';
+  if (method === 'PATCH') headers['Prefer'] = 'return=representation';
+  var opts = { method: method, headers: headers };
+  if (body) opts.body = JSON.stringify(body);
+  return fetch(SB_URL + '/rest/v1/' + path, opts).then(function(res) {
+    if (!res.ok) return res.text().then(function(t) { throw new Error(res.status + ': ' + t); });
+    return res.text().then(function(t) { return t ? JSON.parse(t) : null; });
+  });
 }
 
-async function loadAll(){
-  try {
-    const [pl, dr, pw] = await Promise.all([
-      sbFetch('sw_players?order=start_slot.asc'),
-      sbFetch('sw_draw?id=eq.1'),
-      sbFetch('sw_prizes')
-    ]);
-    players = (pl||[]).map(p=>({id:p.id, name:p.name, slots:p.slots, start:p.start_slot, paid:p.paid}));
-    if(dr && dr.length){ draw=dr[0].draw_data||[]; drawDone=dr[0].done||false; }
-    prizeWinners={};
-    (pw||[]).forEach(p=>{ prizeWinners[p.id]=p.winner; });
-    dbOk=true;
-    document.getElementById('db-error').style.display='none';
-  } catch(e){
-    console.error('DB load error:', e);
-    dbOk=false;
-    document.getElementById('db-error').style.display='block';
-  }
+function loadAll() {
+  return Promise.all([
+    sbFetch('sw_players?order=start_slot.asc').catch(function() { return []; }),
+    sbFetch('sw_draw?id=eq.1').catch(function() { return []; }),
+    sbFetch('sw_prizes').catch(function() { return []; })
+  ]).then(function(results) {
+    var pl = results[0] || [];
+    var dr = results[1] || [];
+    var pw = results[2] || [];
+    players = pl.map(function(p) {
+      return { id: p.id, name: p.name, slots: p.slots, start: p.start_slot, paid: p.paid };
+    });
+    if (dr.length) { draw = dr[0].draw_data || []; drawDone = dr[0].done || false; }
+    prizeWinners = {};
+    pw.forEach(function(p) { prizeWinners[p.id] = p.winner; });
+    document.getElementById('db-error').style.display = 'none';
+  }).catch(function(e) {
+    console.error('DB error:', e);
+    document.getElementById('db-error').style.display = 'block';
+  });
 }
 
-// ── REGISTER ──────────────────────────────────────────────
-function adjSlots(d){
-  const used=players.reduce((s,p)=>s+p.slots,0);
-  const max=Math.max(1, 48-used);
-  wantedSlots=Math.max(1, Math.min(wantedSlots+d, max));
-  document.getElementById('slot-count').textContent=wantedSlots;
-  document.getElementById('cost-display').textContent='£'+(wantedSlots*5);
+function usedSlots() { return players.reduce(function(s, p) { return s + p.slots; }, 0); }
+
+function updateCounter() {
+  var max = Math.max(1, 48 - usedSlots());
+  if (wantedSlots > max) wantedSlots = max;
+  if (wantedSlots < 1) wantedSlots = 1;
+  document.getElementById('slot-count').textContent = wantedSlots;
+  document.getElementById('cost-display').textContent = String.fromCharCode(163) + (wantedSlots * 5);
 }
 
-async function register(){
-  const name=document.getElementById('reg-name').value.trim();
-  if(!name) return flash('Enter your name first!');
-  const used=players.reduce((s,p)=>s+p.slots,0);
-  if(used+wantedSlots>48) return flash('Not enough slots left!');
-  const start=used+1;
-  const btn=document.getElementById('reg-btn');
-  btn.textContent='Saving...'; btn.disabled=true;
-  try{
-    const res=await sbFetch('sw_players','POST',{name,slots:wantedSlots,start_slot:start,paid:false});
-    const np={id:res[0].id,name,slots:wantedSlots,start,paid:false};
-    players.push(np);
-    const slotRange=wantedSlots===1?`slot ${start}`:`slots ${start}–${start+wantedSlots-1}`;
-    let teamsMsg='';
-    if(drawDone){
-      const myTeams=[];
-      for(let s=start;s<start+wantedSlots;s++){const ti=draw[s-1];if(ti!=null)myTeams.push(TEAMS[ti]);}
-      if(myTeams.length) teamsMsg=`<br><br>Your team${myTeams.length>1?'s'}:<br><strong>${myTeams.map(t=>t.f+' '+t.n).join(' · ')}</strong>`;
-    } else {
-      teamsMsg=`<br><br>Teams will be assigned at the draw — check back on the Board tab.`;
-    }
-    const box=document.getElementById('confirm-box');
-    document.getElementById('confirm-msg').innerHTML=
-      `You've got <strong>${slotRange}</strong>.<br>Send <strong>£${wantedSlots*5}</strong> to Peter to confirm your spot.${teamsMsg}`;
-    box.style.display='block';
-    document.getElementById('reg-name').value='';
-    wantedSlots=1;
-    document.getElementById('slot-count').textContent='1';
-    document.getElementById('cost-display').textContent='£5';
-    updateHeader();
-    if(isAdmin) renderAdminPlayers();
-    flash(`${name} registered!`);
-  }catch(e){
-    flash('Error saving — try again');
-    console.error(e);
-  }
-  btn.textContent='Reserve My Slot(s) →'; btn.disabled=false;
+function register() {
+  var name = document.getElementById('reg-name').value.trim();
+  if (!name) { flash('Enter your name first!'); return; }
+  var used = usedSlots();
+  if (used + wantedSlots > 48) { flash('Not enough slots left!'); return; }
+  var start = used + 1;
+  var btn = document.getElementById('reg-btn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+  sbFetch('sw_players', 'POST', { name: name, slots: wantedSlots, start_slot: start, paid: false })
+    .then(function(res) {
+      var np = { id: res[0].id, name: name, slots: wantedSlots, start: start, paid: false };
+      players.push(np);
+      var slotRange = wantedSlots === 1 ? 'slot ' + start : 'slots ' + start + '-' + (start + wantedSlots - 1);
+      var teamsMsg = '';
+      if (drawDone) {
+        var myTeams = [];
+        for (var s = start; s < start + wantedSlots; s++) {
+          var ti = draw[s - 1];
+          if (ti != null) myTeams.push(TEAMS[ti]);
+        }
+        if (myTeams.length) teamsMsg = '<br><br>Your team' + (myTeams.length > 1 ? 's' : '') + ':<br><strong>' + myTeams.map(function(t) { return t.n; }).join(' / ') + '</strong>';
+      } else {
+        teamsMsg = '<br><br>Teams assigned at the draw - check the Board tab later.';
+      }
+      document.getElementById('confirm-msg').innerHTML = 'You have got <strong>' + slotRange + '</strong>.<br>Send <strong>' + String.fromCharCode(163) + (wantedSlots * 5) + '</strong> to Peter to confirm your spot.' + teamsMsg;
+      document.getElementById('confirm-box').style.display = 'block';
+      document.getElementById('reg-name').value = '';
+      wantedSlots = 1;
+      updateCounter();
+      updateHeader();
+      if (isAdmin) renderAdminPlayers();
+      flash(name + ' registered!');
+    })
+    .catch(function(e) { flash('Error saving - try again'); console.error(e); })
+    .finally(function() { btn.textContent = 'Reserve My Slot(s)'; btn.disabled = false; });
 }
 
-// ── ADMIN ──────────────────────────────────────────────────
-function renderAdminPlayers(){
-  const el=document.getElementById('admin-player-list');
-  if(!players.length){el.innerHTML='<div class="empty-state">No players yet</div>';updateAdminStats();return;}
-  el.innerHTML=players.map(p=>{
-    const r=p.slots===1?`Slot ${p.start}`:`Slots ${p.start}–${p.start+p.slots-1}`;
-    return`<div class="player-row">
-      <span class="slot-badge">#${p.start}</span>
-      <span class="player-name">${p.name}</span>
-      <span class="player-meta">${r} · £${p.slots*5}</span>
-      <button class="paid-btn ${p.paid?'paid-yes':'paid-no'}" onclick="togglePaid(${p.id})">${p.paid?'✓ Paid':'✗ Owed'}</button>
-      <button class="btn btn-ghost" style="padding:2px 7px;font-size:11px;" onclick="removePlayer(${p.id})">✕</button>
-    </div>`;
+function renderAdminPlayers() {
+  var el = document.getElementById('admin-player-list');
+  if (!players.length) { el.innerHTML = '<div class="empty-state">No players yet</div>'; updateAdminStats(); return; }
+  el.innerHTML = players.map(function(p) {
+    var r = p.slots === 1 ? 'Slot ' + p.start : 'Slots ' + p.start + '-' + (p.start + p.slots - 1);
+    return '<div class="player-row">' +
+      '<span class="slot-badge">#' + p.start + '</span>' +
+      '<span class="player-name">' + p.name + '</span>' +
+      '<span class="player-meta">' + r + ' - ' + String.fromCharCode(163) + (p.slots * 5) + '</span>' +
+      '<button class="paid-btn ' + (p.paid ? 'paid-yes' : 'paid-no') + '" data-id="' + p.id + '">' + (p.paid ? 'Paid' : 'Owed') + '</button>' +
+      '<button class="btn btn-ghost remove-btn" data-id="' + p.id + '" style="padding:2px 7px;font-size:11px;">X</button>' +
+      '</div>';
   }).join('');
+  el.querySelectorAll('.paid-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { togglePaid(parseInt(this.getAttribute('data-id'))); });
+  });
+  el.querySelectorAll('.remove-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { removePlayer(parseInt(this.getAttribute('data-id'))); });
+  });
   updateAdminStats();
 }
 
-function updateAdminStats(){
-  const paidSlots=players.filter(p=>p.paid).reduce((s,p)=>s+p.slots,0);
-  const owedSlots=players.filter(p=>!p.paid).reduce((s,p)=>s+p.slots,0);
-  document.getElementById('a-pot').textContent='£'+(paidSlots*5);
-  document.getElementById('a-paid').textContent=paidSlots;
-  document.getElementById('a-owed').textContent=owedSlots;
+function updateAdminStats() {
+  var paidSlots = players.filter(function(p) { return p.paid; }).reduce(function(s, p) { return s + p.slots; }, 0);
+  var owedSlots = players.filter(function(p) { return !p.paid; }).reduce(function(s, p) { return s + p.slots; }, 0);
+  document.getElementById('a-pot').textContent = String.fromCharCode(163) + (paidSlots * 5);
+  document.getElementById('a-paid').textContent = paidSlots;
+  document.getElementById('a-owed').textContent = owedSlots;
 }
 
-async function togglePaid(id){
-  const p=players.find(x=>x.id===id); if(!p)return;
-  p.paid=!p.paid;
-  try{
-    await sbFetch(`sw_players?id=eq.${id}`,'PATCH',{paid:p.paid});
-    renderAdminPlayers(); updateHeader();
-  }catch(e){ p.paid=!p.paid; flash('Error updating'); }
+function togglePaid(id) {
+  var p = players.find(function(x) { return x.id === id; });
+  if (!p) return;
+  p.paid = !p.paid;
+  sbFetch('sw_players?id=eq.' + id, 'PATCH', { paid: p.paid })
+    .then(function() { renderAdminPlayers(); updateHeader(); })
+    .catch(function(e) { p.paid = !p.paid; flash('Error updating'); });
 }
 
-async function removePlayer(id){
-  const p=players.find(x=>x.id===id);
-  if(!p||!confirm(`Remove ${p.name}?`))return;
-  try{
-    await sbFetch(`sw_players?id=eq.${id}`,'DELETE');
-    players=players.filter(x=>x.id!==id);
-    let s=1;
-    for(const pl of players){
-      if(pl.start!==s){ pl.start=s; await sbFetch(`sw_players?id=eq.${pl.id}`,'PATCH',{start_slot:s}); }
-      s+=pl.slots;
-    }
-    renderAdminPlayers(); updateHeader(); flash(`${p.name} removed`);
-  }catch(e){ flash('Error removing'); console.error(e); }
+function removePlayer(id) {
+  var p = players.find(function(x) { return x.id === id; });
+  if (!p || !confirm('Remove ' + p.name + '?')) return;
+  sbFetch('sw_players?id=eq.' + id, 'DELETE')
+    .then(function() {
+      players = players.filter(function(x) { return x.id !== id; });
+      var s = 1;
+      var updates = players.map(function(pl) {
+        if (pl.start !== s) { pl.start = s; return sbFetch('sw_players?id=eq.' + pl.id, 'PATCH', { start_slot: s }); }
+        s += pl.slots;
+        return Promise.resolve();
+      });
+      return Promise.all(updates);
+    })
+    .then(function() { renderAdminPlayers(); updateHeader(); flash('Removed'); })
+    .catch(function(e) { flash('Error removing'); console.error(e); });
 }
 
-// ── DRAW ──────────────────────────────────────────────────
-async function runDraw(){
-  if(!players.length)return flash('No players yet!');
-  if(drawDone&&!confirm('Redo the draw? This will reassign all teams.'))return;
-  const idx=Array.from({length:48},(_,i)=>i);
-  for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
-  const drum=document.getElementById('drum');
-  let step=0;
-  const iv=setInterval(async()=>{
-    const t=TEAMS[Math.floor(Math.random()*48)];
-    drum.innerHTML=`<div class="drum-team spin">${t.f} ${t.n}</div><div class="drum-sub">Drawing...</div>`;
+function runDraw() {
+  if (!players.length) { flash('No players yet!'); return; }
+  if (drawDone && !confirm('Redo the draw? This will reassign all teams.')) return;
+  var idx = [];
+  for (var i = 0; i < 48; i++) idx.push(i);
+  for (var j = idx.length - 1; j > 0; j--) {
+    var k = Math.floor(Math.random() * (j + 1));
+    var tmp = idx[j]; idx[j] = idx[k]; idx[k] = tmp;
+  }
+  var drum = document.getElementById('drum');
+  var step = 0;
+  var iv = setInterval(function() {
+    var t = TEAMS[Math.floor(Math.random() * 48)];
+    drum.innerHTML = '<div class="drum-team spin">' + t.n + '</div><div class="drum-sub">Drawing...</div>';
     step++;
-    if(step>35){
+    if (step > 35) {
       clearInterval(iv);
-      draw=idx; drawDone=true;
-      try{ await sbFetch('sw_draw','POST',{id:1,draw_data:idx,done:true}); }catch(e){console.error(e);}
-      drum.innerHTML=`<div class="drum-team">✅ Done!</div><div class="drum-sub">All 48 teams assigned</div>`;
-      renderDrawGrid(); flash('Draw complete!');
+      draw = idx; drawDone = true;
+      sbFetch('sw_draw', 'POST', { id: 1, draw_data: idx, done: true }).catch(function(e) { console.error(e); });
+      drum.innerHTML = '<div class="drum-team">Done!</div><div class="drum-sub">All 48 teams assigned</div>';
+      renderDrawGrid();
+      flash('Draw complete!');
     }
-  },80);
+  }, 80);
 }
 
-async function resetDraw(){
-  if(!confirm('Reset the draw?'))return;
-  draw=[]; drawDone=false;
-  try{ await sbFetch('sw_draw?id=eq.1','PATCH',{draw_data:[],done:false}); }catch(e){console.error(e);}
-  document.getElementById('drum').innerHTML='<div style="color:var(--muted);font-size:13px;">Run the draw to assign teams to slots</div>';
+function resetDraw() {
+  if (!confirm('Reset the draw?')) return;
+  draw = []; drawDone = false;
+  sbFetch('sw_draw?id=eq.1', 'PATCH', { draw_data: [], done: false }).catch(function(e) { console.error(e); });
+  document.getElementById('drum').innerHTML = '<div style="color:var(--muted);font-size:13px;">Run the draw to assign teams to slots</div>';
   renderDrawGrid();
 }
 
-function renderDrawGrid(){
-  document.getElementById('draw-grid').innerHTML=Array.from({length:48},(_,i)=>{
-    const ti=draw[i]!=null?draw[i]:null;
-    const t=ti!=null?TEAMS[ti]:null;
-    const owner=getOwner(i+1);
-    return`<div class="ds ${t?'hit':''}">
-      <div class="dn">#${i+1}</div>
-      ${t?`<div class="dt">${t.f} ${t.n}</div><div class="do">${owner||''}</div>`:`<div class="dt" style="color:var(--muted)">—</div>`}
-    </div>`;
-  }).join('');
-}
-
-function getOwner(slot){
-  for(const p of players) if(slot>=p.start&&slot<p.start+p.slots) return p.name;
+function getOwner(slot) {
+  for (var i = 0; i < players.length; i++) {
+    if (slot >= players[i].start && slot < players[i].start + players[i].slots) return players[i].name;
+  }
   return null;
 }
 
-// ── PRIZES ────────────────────────────────────────────────
-function renderPrizes(){
-  document.getElementById('prize-list').innerHTML=PRIZES.map(p=>{
-    const w=prizeWinners[p.id]||'';
-    return`<div class="prize-row">
-      <div class="prize-icon">${p.ic}</div>
-      <div class="prize-info">
-        <div class="prize-name">${p.name}</div>
-        <div class="prize-desc">${p.desc}</div>
-        ${w?`<div class="prize-winner">🏅 ${w}</div>`:''}
-      </div>
-      <div class="prize-amt">£${p.amt}</div>
-    </div>`;
+function renderDrawGrid() {
+  var html = '';
+  for (var i = 0; i < 48; i++) {
+    var ti = draw[i] != null ? draw[i] : null;
+    var t = ti != null ? TEAMS[ti] : null;
+    var owner = getOwner(i + 1);
+    html += '<div class="ds ' + (t ? 'hit' : '') + '">' +
+      '<div class="dn">#' + (i + 1) + '</div>' +
+      (t ? '<div class="dt">' + t.n + '</div><div class="do">' + (owner || '') + '</div>' : '<div class="dt" style="color:var(--muted)">-</div>') +
+      '</div>';
+  }
+  document.getElementById('draw-grid').innerHTML = html;
+}
+
+function renderPrizes() {
+  document.getElementById('prize-list').innerHTML = PRIZES.map(function(p) {
+    var w = prizeWinners[p.id] || '';
+    return '<div class="prize-row">' +
+      '<div class="prize-icon" style="font-size:11px;font-weight:700;">' + p.ic + '</div>' +
+      '<div class="prize-info"><div class="prize-name">' + p.name + '</div><div class="prize-desc">' + p.desc + '</div>' +
+      (w ? '<div class="prize-winner">Winner: ' + w + '</div>' : '') + '</div>' +
+      '<div class="prize-amt">' + String.fromCharCode(163) + p.amt + '</div></div>';
   }).join('');
 }
 
-function renderPrizeInputs(){
-  document.getElementById('prize-inputs').innerHTML=PRIZES.map(p=>{
-    const w=prizeWinners[p.id]||'';
-    return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <span style="font-size:15px;width:22px;">${p.ic}</span>
-      <span style="flex:1;font-size:12px;color:var(--muted);">${p.name}</span>
-      <input type="text" placeholder="Winner" value="${w}" style="width:130px;flex:none;" onchange="savePrize('${p.id}',this.value)"/>
-    </div>`;
+function renderPrizeInputs() {
+  var el = document.getElementById('prize-inputs');
+  el.innerHTML = PRIZES.map(function(p) {
+    var w = prizeWinners[p.id] || '';
+    return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+      '<span style="font-size:11px;font-weight:700;width:28px;color:var(--gold);">' + p.ic + '</span>' +
+      '<span style="flex:1;font-size:12px;color:var(--muted);">' + p.name + '</span>' +
+      '<input type="text" placeholder="Winner" value="' + w + '" data-prize-id="' + p.id + '" style="width:130px;flex:none;"/>' +
+      '</div>';
   }).join('');
+  el.querySelectorAll('input[data-prize-id]').forEach(function(inp) {
+    inp.addEventListener('change', function() { savePrize(this.getAttribute('data-prize-id'), this.value); });
+  });
 }
 
-async function savePrize(id,val){
-  prizeWinners[id]=val;
-  try{ await sbFetch('sw_prizes','POST',{id,winner:val}); renderPrizes(); renderBoard(); }
-  catch(e){ flash('Error saving winner'); }
+function savePrize(id, val) {
+  prizeWinners[id] = val;
+  sbFetch('sw_prizes', 'POST', { id: id, winner: val })
+    .then(function() { renderPrizes(); renderBoard(); })
+    .catch(function(e) { flash('Error saving winner'); });
 }
 
-// ── LIVE ──────────────────────────────────────────────────
-async function renderLive(){
-  const el=document.getElementById('live-content');
-  const start=new Date('2026-06-11T00:00:00Z');
-  const now=new Date();
-  const days=Math.ceil((start-now)/(1000*60*60*24));
+function renderLivePrizesInto(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '<div class="section-title" style="margin-top:8px;">Prize Tracker</div><div class="prize-list">' +
+    PRIZES.map(function(p) {
+      var w = prizeWinners[p.id] || '';
+      return '<div class="prize-row">' +
+        '<div class="prize-icon" style="font-size:11px;font-weight:700;">' + p.ic + '</div>' +
+        '<div class="prize-info"><div class="prize-name">' + p.name + '</div>' +
+        (w ? '<div class="prize-winner">Winner: ' + w + '</div>' : '<div class="prize-desc">TBC</div>') +
+        '</div><div class="prize-amt">' + String.fromCharCode(163) + p.amt + '</div></div>';
+    }).join('') + '</div>';
+}
 
-  if(now<start){
-    el.innerHTML=`
-      <div class="countdown-box">
-        <div style="font-size:32px;margin-bottom:8px;">⏳</div>
-        <div class="countdown-days">${days}</div>
-        <div class="countdown-label">days until kick-off · 11 June 2026</div>
-      </div>
-      <div style="margin-top:4px;" id="live-prizes-wrap"></div>`;
-    renderLivePrizes('live-prizes-wrap');
+function renderLive() {
+  var el = document.getElementById('live-content');
+  var start = new Date('2026-06-11T00:00:00Z');
+  var now = new Date();
+  var days = Math.ceil((start - now) / (1000 * 60 * 60 * 24));
+
+  if (now < start) {
+    el.innerHTML = '<div class="countdown-box"><div style="font-size:32px;margin-bottom:8px;">Countdown</div>' +
+      '<div class="countdown-days">' + days + '</div>' +
+      '<div class="countdown-label">days until kick-off - 11 June 2026</div></div>' +
+      '<div id="lp-wrap"></div>';
+    renderLivePrizesInto('lp-wrap');
     return;
   }
 
-  el.innerHTML=`<div class="live-banner"><div class="live-dot"></div>Live · auto-refreshes every 60s</div><div id="live-matches"><div class="empty-state">Loading match data...</div></div><div style="margin-top:16px;" id="live-prizes-wrap"></div>`;
-  renderLivePrizes('live-prizes-wrap');
+  el.innerHTML = '<div class="live-banner"><div class="live-dot"></div>Live - auto-refreshes every 60s</div>' +
+    '<div id="live-matches"><div class="empty-state">Loading match data...</div></div>' +
+    '<div id="lp-wrap"></div>';
+  renderLivePrizesInto('lp-wrap');
 
-  try{
-    const [mr, sr] = await Promise.all([
-      fetch('https://api.football-data.org/v4/competitions/WC/matches?season=2026',{headers:{'X-Auth-Token':FD_KEY}}),
-      fetch('https://api.football-data.org/v4/competitions/WC/standings?season=2026',{headers:{'X-Auth-Token':FD_KEY}})
-    ]);
-    const md=await mr.json();
-    const sd=await sr.json();
-    const matches=md.matches||[];
-    let html='';
-
-    const live=matches.filter(m=>m.status==='IN_PLAY'||m.status==='PAUSED');
-    const recent=matches.filter(m=>m.status==='FINISHED').slice(-6).reverse();
-    const upcoming=matches.filter(m=>m.status==='TIMED'||m.status==='SCHEDULED').slice(0,5);
-
-    if(live.length){ html+=`<div class="group-title">🔴 Live Now</div>${live.map(m=>matchCard(m,true)).join('')}`; }
-    if(recent.length){ html+=`<div class="group-title">Recent Results</div>${recent.map(m=>matchCard(m,false)).join('')}`; }
-    if(upcoming.length){ html+=`<div class="group-title">Coming Up</div>${upcoming.map(m=>matchCard(m,false)).join('')}`; }
-
-    if(sd.standings&&sd.standings.length){
-      html+=`<div class="group-title" style="margin-top:8px;">Group Standings</div>`;
-      sd.standings.forEach(grp=>{
-        html+=`<div style="margin-bottom:12px;">
-          <div style="font-size:12px;color:var(--muted);margin-bottom:4px;padding-left:2px;">Group ${grp.group||''}</div>
-          <table class="standings-table">
-            <tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr>
-            ${grp.table.map((t,i)=>`<tr class="${i<2?'qualify':''}">
-              <td>${t.team.shortName||t.team.name}</td>
-              <td>${t.playedGames}</td><td>${t.won}</td><td>${t.draw}</td><td>${t.lost}</td>
-              <td>${t.goalDifference>0?'+':''}${t.goalDifference}</td>
-              <td><strong>${t.points}</strong></td>
-            </tr>`).join('')}
-          </table>
-        </div>`;
+  Promise.all([
+    fetch('https://api.football-data.org/v4/competitions/WC/matches?season=2026', { headers: { 'X-Auth-Token': FD_KEY } }),
+    fetch('https://api.football-data.org/v4/competitions/WC/standings?season=2026', { headers: { 'X-Auth-Token': FD_KEY } })
+  ]).then(function(responses) {
+    return Promise.all(responses.map(function(r) { return r.json(); }));
+  }).then(function(data) {
+    var md = data[0]; var sd = data[1];
+    var matches = md.matches || [];
+    var html = '';
+    var live = matches.filter(function(m) { return m.status === 'IN_PLAY' || m.status === 'PAUSED'; });
+    var recent = matches.filter(function(m) { return m.status === 'FINISHED'; }).slice(-6).reverse();
+    var upcoming = matches.filter(function(m) { return m.status === 'TIMED' || m.status === 'SCHEDULED'; }).slice(0, 5);
+    if (live.length) { html += '<div class="group-title">Live Now</div>' + live.map(function(m) { return matchCard(m, true); }).join(''); }
+    if (recent.length) { html += '<div class="group-title">Recent Results</div>' + recent.map(function(m) { return matchCard(m, false); }).join(''); }
+    if (upcoming.length) { html += '<div class="group-title">Coming Up</div>' + upcoming.map(function(m) { return matchCard(m, false); }).join(''); }
+    if (sd.standings && sd.standings.length) {
+      html += '<div class="group-title" style="margin-top:8px;">Group Standings</div>';
+      sd.standings.forEach(function(grp) {
+        html += '<div style="margin-bottom:12px;"><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Group ' + (grp.group || '') + '</div>' +
+          '<table class="standings-table"><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr>' +
+          grp.table.map(function(t, i) {
+            return '<tr class="' + (i < 2 ? 'qualify' : '') + '"><td>' + (t.team.shortName || t.team.name) + '</td>' +
+              '<td>' + t.playedGames + '</td><td>' + t.won + '</td><td>' + t.draw + '</td><td>' + t.lost + '</td>' +
+              '<td>' + (t.goalDifference > 0 ? '+' : '') + t.goalDifference + '</td><td><strong>' + t.points + '</strong></td></tr>';
+          }).join('') + '</table></div>';
       });
     }
-    document.getElementById('live-matches').innerHTML=html||'<div class="empty-state">No match data yet</div>';
-  }catch(e){
-    document.getElementById('live-matches').innerHTML='<div class="empty-state">Could not load match data — try again shortly</div>';
-    console.error(e);
+    document.getElementById('live-matches').innerHTML = html || '<div class="empty-state">No match data yet</div>';
+  }).catch(function(e) {
+    var lm = document.getElementById('live-matches');
+    if (lm) lm.innerHTML = '<div class="empty-state">Could not load match data</div>';
+  });
+}
+
+function matchCard(m, isLive) {
+  var home = (m.homeTeam.shortName || m.homeTeam.name || 'TBD');
+  var away = (m.awayTeam.shortName || m.awayTeam.name || 'TBD');
+  var s = m.score.fullTime;
+  var hasScore = s && s.home != null;
+  var dateStr = '';
+  if (m.utcDate) {
+    var dt = new Date(m.utcDate);
+    dateStr = dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   }
+  return '<div class="match-card">' +
+    '<div class="match-teams"><div>' + home + '</div><div style="color:var(--muted);font-size:11px;margin-top:2px;">' + away + '</div>' +
+    '<div class="match-status ' + (isLive ? 'match-live-tag' : '') + '">' + (isLive ? 'LIVE' : dateStr) + '</div></div>' +
+    '<div class="match-score">' + (hasScore ? s.home + '-' + s.away : 'vs') + '</div></div>';
 }
 
-function matchCard(m,isLive){
-  const home=m.homeTeam.shortName||m.homeTeam.name||'TBD';
-  const away=m.awayTeam.shortName||m.awayTeam.name||'TBD';
-  const s=m.score.fullTime;
-  const hasScore=s&&s.home!=null;
-  return`<div class="match-card">
-    <div class="match-teams">
-      <div>${home}</div>
-      <div style="color:var(--muted);font-size:11px;margin-top:2px;">${away}</div>
-      <div class="match-status ${isLive?'match-live-tag':''}">${isLive?'🔴 LIVE':fmtDate(m.utcDate)}</div>
-    </div>
-    <div class="match-score">${hasScore?`${s.home}–${s.away}`:'vs'}</div>
-  </div>`;
-}
-
-function fmtDate(d){
-  if(!d)return'';
-  const dt=new Date(d);
-  return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-}
-
-function renderLivePrizes(containerId){
-  const el=document.getElementById(containerId);
-  if(!el)return;
-  el.innerHTML=`<div class="section-title">🏅 Prize Tracker</div><div class="prize-list">`+
-    PRIZES.map(p=>{const w=prizeWinners[p.id]||'';
-    return`<div class="prize-row">
-      <div class="prize-icon">${p.ic}</div>
-      <div class="prize-info">
-        <div class="prize-name">${p.name}</div>
-        ${w?`<div class="prize-winner">🏅 ${w}</div>`:`<div class="prize-desc">TBC</div>`}
-      </div>
-      <div class="prize-amt">£${p.amt}</div>
-    </div>`;}).join('')+'</div>';
-}
-
-// ── BOARD ──────────────────────────────────────────────────
-function renderBoard(){
-  const collected=players.filter(p=>p.paid).reduce((s,p)=>s+p.slots*5,0);
-  document.getElementById('board-collected').textContent='£'+collected;
-  const el=document.getElementById('board-list');
-  if(!players.length){ el.innerHTML='<div class="empty-state">No one has joined yet!</div>'; return; }
-  if(!drawDone){ el.innerHTML='<div class="empty-state">Draw hasn\'t happened yet — check back soon!</div><div style="margin-top:12px;">'+
-    players.map(p=>`<div class="lb-card"><div class="lb-name">${p.name}</div><div style="font-size:12px;color:var(--muted);">${p.slots} slot${p.slots>1?'s':''} · awaiting draw</div></div>`).join('')+
-    '</div>'; return; }
-  el.innerHTML=players.map(p=>{
-    const teams=[];
-    for(let s=p.start;s<p.start+p.slots;s++){const ti=draw[s-1];if(ti!=null)teams.push(TEAMS[ti]);}
-    const myPrizes=PRIZES.filter(pr=>prizeWinners[pr.id]===p.name);
-    return`<div class="lb-card">
-      <div class="lb-name">${p.name}${myPrizes.length?' 🏅'.repeat(myPrizes.length):''}</div>
-      <div class="team-chips">${teams.map(t=>`<span class="team-chip">${t.f} ${t.n}</span>`).join('')}</div>
-      ${myPrizes.length?`<div class="prize-badges">${myPrizes.map(pr=>`${pr.ic} ${pr.name} — £${pr.amt}`).join(' · ')}</div>`:''}
-    </div>`;
+function renderBoard() {
+  var paid = players.filter(function(p) { return p.paid; }).reduce(function(s, p) { return s + p.slots * 5; }, 0);
+  document.getElementById('board-collected').textContent = String.fromCharCode(163) + paid;
+  var el = document.getElementById('board-list');
+  if (!players.length) { el.innerHTML = '<div class="empty-state">No one has joined yet!</div>'; return; }
+  if (!drawDone) {
+    el.innerHTML = '<div class="empty-state">Draw has not happened yet - check back soon!</div>' +
+      '<div style="margin-top:12px;">' + players.map(function(p) {
+        return '<div class="lb-card"><div class="lb-name">' + p.name + '</div>' +
+          '<div style="font-size:12px;color:var(--muted);">' + p.slots + ' slot' + (p.slots > 1 ? 's' : '') + ' - awaiting draw</div></div>';
+      }).join('') + '</div>';
+    return;
+  }
+  el.innerHTML = players.map(function(p) {
+    var teams = [];
+    for (var s = p.start; s < p.start + p.slots; s++) {
+      var ti = draw[s - 1];
+      if (ti != null) teams.push(TEAMS[ti]);
+    }
+    var myPrizes = PRIZES.filter(function(pr) { return prizeWinners[pr.id] === p.name; });
+    return '<div class="lb-card"><div class="lb-name">' + p.name + (myPrizes.length ? ' [Winner]' : '') + '</div>' +
+      '<div class="team-chips">' + teams.map(function(t) { return '<span class="team-chip">' + t.n + '</span>'; }).join('') + '</div>' +
+      (myPrizes.length ? '<div class="prize-badges">' + myPrizes.map(function(pr) { return pr.name + ' - ' + String.fromCharCode(163) + pr.amt; }).join(' / ') + '</div>' : '') +
+      '</div>';
   }).join('');
 }
 
-// ── HEADER ────────────────────────────────────────────────
-function updateHeader(){
-  const used=players.reduce((s,p)=>s+p.slots,0);
-  const paid=players.filter(p=>p.paid).reduce((s,p)=>s+p.slots*5,0);
-  document.getElementById('hdr-pot').textContent='Pot: £'+paid;
-  document.getElementById('hdr-slots').textContent=(48-used)+' slots left';
-  document.getElementById('hdr-players').textContent=players.length+' players';
-  document.getElementById('slots-left').textContent=48-used;
-  adjSlots(0);
+function updateHeader() {
+  var used = usedSlots();
+  var paid = players.filter(function(p) { return p.paid; }).reduce(function(s, p) { return s + p.slots * 5; }, 0);
+  document.getElementById('hdr-pot').textContent = 'Pot: ' + String.fromCharCode(163) + paid;
+  document.getElementById('hdr-slots').textContent = (48 - used) + ' slots left';
+  document.getElementById('hdr-players').textContent = players.length + ' players';
+  document.getElementById('slots-left').textContent = 48 - used;
+  updateCounter();
 }
 
-// ── ADMIN UNLOCK ──────────────────────────────────────────
-function trophyTap(){
-  tapCount++; clearTimeout(tapTimer);
-  tapTimer=setTimeout(()=>tapCount=0,1500);
-  if(tapCount>=3){
-    tapCount=0;
+function go(tab) {
+  var tabs = ['join', 'prizes', 'live', 'board', 'admin'];
+  tabs.forEach(function(t) {
+    var tb = document.getElementById('tab-' + t);
+    var pn = document.getElementById('panel-' + t);
+    if (tb) tb.classList.toggle('active', t === tab);
+    if (pn) { pn.classList.remove('active'); }
+  });
+  var panel = document.getElementById('panel-' + tab);
+  if (panel) { panel.classList.add('active'); panel.classList.remove('hidden'); }
+  if (tab === 'prizes') renderPrizes();
+  if (tab === 'live') renderLive();
+  if (tab === 'board') renderBoard();
+  if (tab === 'admin') { renderAdminPlayers(); renderDrawGrid(); renderPrizeInputs(); }
+}
+
+function trophyTap() {
+  tapCount++;
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(function() { tapCount = 0; }, 1500);
+  if (tapCount >= 3) {
+    tapCount = 0;
     document.getElementById('pw-modal').classList.remove('hidden');
-    setTimeout(()=>document.getElementById('pw-input').focus(),100);
+    setTimeout(function() { document.getElementById('pw-input').focus(); }, 100);
   }
 }
-function checkPw(){
-  if(document.getElementById('pw-input').value===ADMIN_PW){
-    isAdmin=true; closePw();
+
+function checkPw() {
+  if (document.getElementById('pw-input').value === ADMIN_PW) {
+    isAdmin = true;
+    document.getElementById('pw-modal').classList.add('hidden');
+    document.getElementById('pw-input').value = '';
     document.getElementById('tab-admin').classList.remove('hidden');
-    go('admin'); flash('Welcome, Peter 👋');
-  }else{
-    document.getElementById('pw-input').value='';
+    go('admin');
+    flash('Welcome Peter!');
+  } else {
+    document.getElementById('pw-input').value = '';
     flash('Wrong password');
   }
 }
-function closePw(){ document.getElementById('pw-modal').classList.add('hidden'); document.getElementById('pw-input').value=''; }
 
-// ── TABS ──────────────────────────────────────────────────
-function go(tab){
-  ['join','prizes','live','board','admin'].forEach(t=>{
-    const tb=document.getElementById('tab-'+t);
-    const pn=document.getElementById('panel-'+t);
-    if(tb) tb.classList.toggle('active',t===tab);
-    if(pn){ pn.classList.remove('active'); }
-  });
-  const panel=document.getElementById('panel-'+tab);
-  if(panel){ panel.classList.add('active'); panel.classList.remove('hidden'); }
-  if(tab==='prizes') renderPrizes();
-  if(tab==='live') renderLive();
-  if(tab==='board') renderBoard();
-  if(tab==='admin'){ renderAdminPlayers(); renderDrawGrid(); renderPrizeInputs(); }
+function flash(msg) {
+  var el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function() { el.remove(); }, 2600);
 }
 
-// ── TOAST ─────────────────────────────────────────────────
-function flash(msg){
-  const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
-  document.body.appendChild(el); setTimeout(()=>el.remove(),2600);
-}
+// Wire up events
+document.getElementById('tab-join').addEventListener('click', function() { go('join'); });
+document.getElementById('tab-prizes').addEventListener('click', function() { go('prizes'); });
+document.getElementById('tab-live').addEventListener('click', function() { go('live'); });
+document.getElementById('tab-board').addEventListener('click', function() { go('board'); });
+document.getElementById('tab-admin').addEventListener('click', function() { go('admin'); });
+document.getElementById('trophy').addEventListener('click', trophyTap);
+document.getElementById('btn-minus').addEventListener('click', function() { wantedSlots--; updateCounter(); });
+document.getElementById('btn-plus').addEventListener('click', function() { wantedSlots++; updateCounter(); });
+document.getElementById('reg-btn').addEventListener('click', register);
+document.getElementById('pw-cancel').addEventListener('click', function() { document.getElementById('pw-modal').classList.add('hidden'); });
+document.getElementById('pw-enter').addEventListener('click', checkPw);
+document.getElementById('pw-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPw(); });
+document.getElementById('draw-btn').addEventListener('click', runDraw);
+document.getElementById('reset-btn').addEventListener('click', resetDraw);
 
-// ── INIT ──────────────────────────────────────────────────
-async function init(){
-  // Always show the app — don't block on DB
-  document.getElementById('main-app').style.display='block';
-  renderPrizes();
-  renderBoard();
+// Init - show app immediately, load data in background
+document.getElementById('main-app').style.display = 'block';
+renderPrizes();
+renderBoard();
 
-  // Load data with a 6 second timeout
-  const loadTimeout=new Promise(resolve=>setTimeout(resolve,6000));
-  await Promise.race([loadAll(), loadTimeout]);
-
+var loadTimeout = new Promise(function(resolve) { setTimeout(resolve, 6000); });
+Promise.race([loadAll(), loadTimeout]).then(function() {
   updateHeader();
   renderBoard();
+});
 
-  // Auto-refresh every 60s
-  setInterval(async()=>{
-    await loadAll();
+setInterval(function() {
+  loadAll().then(function() {
     updateHeader();
     renderBoard();
-    if(document.getElementById('panel-live').classList.contains('active')) renderLive();
-    if(isAdmin){ renderAdminPlayers(); }
-  },60000);
-}
-
-init();
+    if (document.getElementById('panel-live').classList.contains('active')) renderLive();
+    if (isAdmin) renderAdminPlayers();
+  });
+}, 60000);
 </script>
 </body>
 </html>
