@@ -277,6 +277,7 @@ input:focus{border-color:var(--gl);}
 var SB_URL = 'https://mdvffowkupqivkcoxity.supabase.co';
 var SB_KEY = 'sb_publishable_moR9FRoQ2v5WlSQKmDynhA_uxT85FdJ';
 var FD_KEY = '69719b7e7f5b4b31b034971f970248e1';
+var FD_BASE = 'https://corsproxy.io/?https://api.football-data.org/v4';
 var ADMIN_PW = 'Three lions';
 
 var TEAMS = [
@@ -586,9 +587,9 @@ function renderTournament() {
 
 function fetchTournamentData() {
   Promise.all([
-    fetch('https://api.football-data.org/v4/competitions/WC/matches?season=2026', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); }),
-    fetch('https://api.football-data.org/v4/competitions/WC/standings?season=2026', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); }),
-    fetch('https://api.football-data.org/v4/competitions/WC/scorers?season=2026&limit=10', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); })
+    fetch(FD_BASE + '/competitions/WC/matches?season=2026', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); }),
+    fetch(FD_BASE + '/competitions/WC/standings?season=2026', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); }),
+    fetch(FD_BASE + '/competitions/WC/scorers?season=2026&limit=10', { headers: { 'X-Auth-Token': FD_KEY } }).then(function(r) { return r.json(); })
   ]).then(function(data) {
     buildTournamentHTML(data[0], data[1], data[2]);
   }).catch(function(e) {
@@ -692,7 +693,7 @@ function testApiConnection() {
   statusEl.className = 'api-status';
   statusEl.style.display = 'block';
   statusEl.textContent = 'Testing...';
-  fetch('https://api.football-data.org/v4/competitions/WC', { headers: { 'X-Auth-Token': FD_KEY } })
+  fetch(FD_BASE + '/competitions/WC', { headers: { 'X-Auth-Token': FD_KEY } })
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
