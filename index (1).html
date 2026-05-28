@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>World Cup 2026 Sweepstake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --green:#1a7a3c;--green-light:#22a050;--gold:#f5c842;--red:#e03c2d;
+  --white:#f8f8f2;--dark:#0f1a12;--panel:#162019;--border:rgba(255,255,255,0.08);
+  --muted:rgba(255,255,255,0.45);
+}
+body{background:var(--dark);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;}
+.app{max-width:600px;margin:0 auto;padding-bottom:80px;}
+
+/* HEADER */
+.header{background:var(--green);padding:20px 20px 16px;position:relative;overflow:hidden;cursor:default;user-select:none;}
+.header::before{content:'⚽';position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.12;transform:rotate(20deg);pointer-events:none;}
+.header h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1;color:#fff;}
+.header p{font-size:13px;color:rgba(255,255,255,0.75);margin-top:4px;}
+.header-meta{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.meta-pill{background:rgba(0,0,0,0.25);border-radius:20px;padding:4px 12px;font-size:12px;color:rgba(255,255,255,0.9);font-weight:500;}
+.trophy-tap{display:inline;cursor:pointer;}
+
+/* TABS */
+.tabs{display:flex;background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.tab{flex:1;padding:12px 4px;font-size:11px;font-weight:600;text-align:center;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all 0.2s;letter-spacing:0.3px;text-transform:uppercase;}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+.panel{display:none;padding:16px;}
+.panel.active{display:block;}
+
+/* COMMON */
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);margin-bottom:12px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:13px;}
+
+/* INPUTS */
+input[type=text],input[type=number],input[type=password],select{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:6px;
+  color:var(--white);padding:8px 10px;font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;width:100%;
+}
+input[type=text]:focus,input[type=number]:focus,input[type=password]:focus{border-color:var(--green-light);}
+.input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+.input-row input[type=number]{width:70px;flex:none;}
+.input-row input[type=text]{flex:1;}
+
+/* BUTTONS */
+.btn{padding:8px 14px;border-radius:6px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.btn:active{transform:scale(0.97);}
+.btn-green{background:var(--green-light);color:#fff;}
+.btn-green:hover{background:#28b85c;}
+.btn-gold{background:var(--gold);color:#1a1a00;}
+.btn-gold:hover{background:#f7d060;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.2);color:var(--white);}
+.btn-full{width:100%;}
+
+/* PAYMENT STATS */
+.payment-summary{display:flex;gap:8px;margin-bottom:12px;}
+.pay-stat{flex:1;background:rgba(255,255,255,0.05);border-radius:8px;padding:10px;text-align:center;}
+.pay-stat-val{font-family:'Bebas Neue',sans-serif;font-size:24px;}
+.pay-stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+.green-val{color:#4dcc7a;}.red-val{color:#f47066;}.gold-val{color:var(--gold);}
+
+/* PLAYER LIST */
+.player-list{display:flex;flex-direction:column;gap:6px;}
+.player-row{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border-radius:6px;padding:8px 10px;flex-wrap:wrap;}
+.slot-badge{background:var(--green);color:#fff;border-radius:4px;font-size:11px;font-weight:600;padding:2px 6px;min-width:28px;text-align:center;}
+.player-name{flex:1;font-size:13px;min-width:80px;}
+.player-slots-label{font-size:12px;color:var(--muted);}
+.paid-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;}
+.paid-yes{background:rgba(26,122,60,0.3);color:#4dcc7a;}
+.paid-no{background:rgba(224,60,45,0.2);color:#f47066;}
+
+/* DRAW */
+.drum-display{background:rgba(0,0,0,0.3);border:2px solid var(--green);border-radius:10px;padding:20px;text-align:center;margin-bottom:12px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.drum-team{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);letter-spacing:2px;line-height:1;}
+.drum-slot{font-size:13px;color:var(--muted);margin-top:4px;}
+.drum-spinning{animation:spintxt 0.08s infinite;}
+@keyframes spintxt{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.draw-btn-row{display:flex;gap:8px;margin-bottom:12px;}
+.draw-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:14px;}
+.draw-slot{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:5px;padding:5px 3px;text-align:center;transition:all 0.3s;}
+.draw-slot.assigned{background:rgba(26,122,60,0.2);border-color:var(--green);}
+.draw-slot .slot-num{color:var(--muted);font-size:9px;}
+.draw-slot .slot-team{font-size:9px;font-weight:600;color:var(--white);margin-top:2px;line-height:1.2;}
+.draw-slot .slot-owner{font-size:8px;color:var(--gold);margin-top:1px;}
+
+/* PRIZES */
+.pot-bar{background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.pot-label{font-size:12px;color:var(--muted);}
+.pot-value{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);}
+.prize-list{display:flex;flex-direction:column;gap:8px;}
+.prize-row{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.prize-icon{font-size:20px;width:28px;text-align:center;}
+.prize-info{flex:1;}
+.prize-name{font-size:13px;font-weight:600;}
+.prize-desc{font-size:11px;color:var(--muted);margin-top:1px;}
+.prize-amount{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);}
+.prize-winner-tag{font-size:11px;color:#4dcc7a;font-weight:600;margin-top:2px;}
+
+/* PUBLIC BOARD */
+.lb-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
+.lb-name{font-size:13px;font-weight:600;margin-bottom:6px;}
+.team-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.team-chip{background:rgba(26,122,60,0.2);border:1px solid rgba(26,122,60,0.4);border-radius:4px;padding:3px 8px;font-size:12px;}
+
+/* LIVE */
+.live-banner{background:var(--red);border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* MODAL / PASSWORD */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:28px 24px;max-width:320px;width:100%;text-align:center;}
+.modal h2{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);margin-bottom:8px;}
+.modal p{font-size:13px;color:var(--muted);margin-bottom:16px;}
+.modal input{text-align:center;font-size:16px;margin-bottom:12px;}
+.modal-btns{display:flex;gap:8px;}
+.hidden{display:none!important;}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:200;animation:fadeup 2.5s forwards;pointer-events:none;white-space:nowrap;}
+@keyframes fadeup{0%{opacity:0;transform:translateX(-50%) translateY(10px);}15%{opacity:1;transform:translateX(-50%) translateY(0);}80%{opacity:1;}100%{opacity:0;}}
+
+/* SPINNER */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.loading-screen{position:fixed;inset:0;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;gap:16px;}
+.loading-screen h2{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);}
+.loading-screen p{font-size:13px;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div class="loading-screen" id="loading-screen">
+  <div style="font-size:48px;">⚽</div>
+  <h2>World Cup 2026</h2>
+  <p>Loading sweepstake...</p>
+  <div class="spinner"></div>
+</div>
+
+<!-- Password modal -->
+<div class="overlay hidden" id="pw-modal">
+  <div class="modal">
+    <h2>🔐 Admin Access</h2>
+    <p>Enter the admin password to continue</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()" />
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-full" onclick="closePwModal()">Cancel</button>
+      <button class="btn btn-gold btn-full" onclick="checkPw()">Enter</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" id="main-app" style="display:none;">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1><span class="trophy-tap" id="trophy-tap" onclick="trophyTap()">🏆</span> World Cup 2026 Sweepstake</h1>
+    <p>USA · Mexico · Canada &mdash; 11 Jun to 19 Jul 2026</p>
+    <div class="header-meta">
+      <span class="meta-pill" id="pot-pill">Pot: £0</span>
+      <span class="meta-pill" id="slots-pill">0/48 slots sold</span>
+      <span class="meta-pill" id="players-pill">0 players</span>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs-bar">
+    <div class="tab hidden" id="tab-admin" onclick="switchTab('admin')">⚙️ Admin</div>
+    <div class="tab active" id="tab-draw" onclick="switchTab('draw')">🎲 Draw</div>
+    <div class="tab" id="tab-prizes" onclick="switchTab('prizes')">🏅 Prizes</div>
+    <div class="tab" id="tab-live" onclick="switchTab('live')">📊 Live</div>
+    <div class="tab" id="tab-public" onclick="switchTab('public')">👥 Board</div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="panel hidden" id="panel-admin">
+    <div class="section-title">💰 Pot Status</div>
+    <div class="payment-summary">
+      <div class="pay-stat"><div class="pay-stat-val gold-val" id="stat-pot">£0</div><div class="pay-stat-label">Collected</div></div>
+      <div class="pay-stat"><div class="pay-stat-val green-val" id="stat-paid">0</div><div class="pay-stat-label">Slots paid</div></div>
+      <div class="pay-stat"><div class="pay-stat-val red-val" id="stat-owed">0</div><div class="pay-stat-label">Slots owed</div></div>
+    </div>
+
+    <div class="section-title">➕ Add Player</div>
+    <div class="card">
+      <div class="input-row">
+        <input type="text" id="player-name-input" placeholder="Player name" />
+        <input type="number" id="player-slots-input" value="1" min="1" max="6" style="width:65px;flex:none;" />
+        <button class="btn btn-green" onclick="addPlayer()">Add</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);">£5 per slot &middot; each slot gets one team in the draw</div>
+    </div>
+
+    <div class="section-title">👥 Players</div>
+    <div class="card" style="padding:10px;">
+      <div class="player-list" id="player-list"><div class="empty-state">No players added yet</div></div>
+    </div>
+
+    <div class="section-title">🏆 Assign Prize Winners</div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;">Type the player name next to each prize as the tournament progresses</div>
+      <div id="prize-winner-inputs"></div>
+    </div>
+  </div>
+
+  <!-- DRAW -->
+  <div class="panel" id="panel-draw">
+    <div class="section-title">🎲 The Draw</div>
+    <div class="drum-display" id="drum-display">
+      <div style="color:var(--muted);font-size:13px;" id="drum-msg">Add players in Admin, then draw to assign teams</div>
+    </div>
+    <div class="draw-btn-row" id="draw-btns" style="display:none;">
+      <button class="btn btn-gold" style="flex:2;" onclick="runDraw()">🎲 Draw All Teams</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="resetDraw()">↺ Reset</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;text-align:center;">48 teams randomly assigned to slot numbers</div>
+    <div class="draw-grid" id="draw-grid"></div>
+  </div>
+
+  <!-- PRIZES -->
+  <div class="panel" id="panel-prizes">
+    <div class="section-title">🏅 Prize Breakdown</div>
+    <div class="pot-bar">
+      <div><div class="pot-label">Total pot</div><div class="pot-value">£240</div></div>
+      <div style="text-align:right"><div class="pot-label">Per slot</div><div class="pot-value" style="font-size:18px;">£5</div></div>
+    </div>
+    <div class="prize-list" id="prize-list"></div>
+  </div>
+
+  <!-- LIVE -->
+  <div class="panel" id="panel-live">
+    <div class="live-banner"><div class="live-dot"></div>Live prize tracker</div>
+    <div class="prize-list" id="live-prizes"></div>
+    <div style="margin-top:20px;text-align:center;padding:20px;color:var(--muted);font-size:12px;">
+      ⏳ Group standings will appear here once matches begin on 11 June
+    </div>
+  </div>
+
+  <!-- PUBLIC BOARD -->
+  <div class="panel active" id="panel-public">
+    <div class="section-title">🌍 Sweepstake Board</div>
+    <div class="pot-bar">
+      <div><div class="pot-label">Prize pot</div><div class="pot-value">£240</div></div>
+      <div style="text-align:right"><div class="pot-label">Collected</div><div class="pot-value" id="public-collected" style="font-size:20px;color:#4dcc7a;">£0</div></div>
+    </div>
+    <div id="public-list"><div class="empty-state">Draw hasn't happened yet — check back soon!</div></div>
+  </div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://mdvffowkupqivkcoxity.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_moR9FRoQ2v5WlSQKmDynhA_uxT85FdJ';
+const ADMIN_PW = 'Three lions';
+
+const TEAMS = [
+  {name:"Mexico",flag:"🇲🇽",group:"A"},{name:"South Korea",flag:"🇰🇷",group:"A"},{name:"South Africa",flag:"🇿🇦",group:"A"},{name:"Czechia",flag:"🇨🇿",group:"A"},
+  {name:"Canada",flag:"🇨🇦",group:"B"},{name:"Switzerland",flag:"🇨🇭",group:"B"},{name:"Qatar",flag:"🇶🇦",group:"B"},{name:"Bosnia & Herz.",flag:"🇧🇦",group:"B"},
+  {name:"Brazil",flag:"🇧🇷",group:"C"},{name:"Morocco",flag:"🇲🇦",group:"C"},{name:"Scotland",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",group:"C"},{name:"Haiti",flag:"🇭🇹",group:"C"},
+  {name:"USA",flag:"🇺🇸",group:"D"},{name:"Paraguay",flag:"🇵🇾",group:"D"},{name:"Australia",flag:"🇦🇺",group:"D"},{name:"Türkiye",flag:"🇹🇷",group:"D"},
+  {name:"Germany",flag:"🇩🇪",group:"E"},{name:"Ecuador",flag:"🇪🇨",group:"E"},{name:"Ivory Coast",flag:"🇨🇮",group:"E"},{name:"Curaçao",flag:"🇨🇼",group:"E"},
+  {name:"Netherlands",flag:"🇳🇱",group:"F"},{name:"Japan",flag:"🇯🇵",group:"F"},{name:"Tunisia",flag:"🇹🇳",group:"F"},{name:"Sweden",flag:"🇸🇪",group:"F"},
+  {name:"Belgium",flag:"🇧🇪",group:"G"},{name:"Iran",flag:"🇮🇷",group:"G"},{name:"Egypt",flag:"🇪🇬",group:"G"},{name:"New Zealand",flag:"🇳🇿",group:"G"},
+  {name:"Spain",flag:"🇪🇸",group:"H"},{name:"Uruguay",flag:"🇺🇾",group:"H"},{name:"Saudi Arabia",flag:"🇸🇦",group:"H"},{name:"Cape Verde",flag:"🇨🇻",group:"H"},
+  {name:"France",flag:"🇫🇷",group:"I"},{name:"Senegal",flag:"🇸🇳",group:"I"},{name:"Norway",flag:"🇳🇴",group:"I"},{name:"Iraq",flag:"🇮🇶",group:"I"},
+  {name:"Argentina",flag:"🇦🇷",group:"J"},{name:"Algeria",flag:"🇩🇿",group:"J"},{name:"Austria",flag:"🇦🇹",group:"J"},{name:"Jordan",flag:"🇯🇴",group:"J"},
+  {name:"Portugal",flag:"🇵🇹",group:"K"},{name:"Colombia",flag:"🇨🇴",group:"K"},{name:"Uzbekistan",flag:"🇺🇿",group:"K"},{name:"DR Congo",flag:"🇨🇩",group:"K"},
+  {name:"England",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",group:"L"},{name:"Croatia",flag:"🇭🇷",group:"L"},{name:"Ghana",flag:"🇬🇭",group:"L"},{name:"Panama",flag:"🇵🇦",group:"L"}
+];
+
+const PRIZES = [
+  {id:"winner",icon:"🥇",name:"Champion",desc:"Team wins the World Cup",amount:80},
+  {id:"runner",icon:"🥈",name:"Nearly Men",desc:"Team reaches the final",amount:45},
+  {id:"third",icon:"🥉",name:"Bronze Ballers",desc:"Team finishes third",amount:25},
+  {id:"boot",icon:"⚽",name:"Boot Camp",desc:"Your team's player wins Golden Boot",amount:20},
+  {id:"concede",icon:"🤦",name:"Leaky Pipes",desc:"Most goals conceded across tournament",amount:15},
+  {id:"saves",icon:"🧤",name:"Shot Stopper",desc:"Most saves by a goalkeeper",amount:15},
+  {id:"redcards",icon:"🔴",name:"Dirtiest Dogs",desc:"Most red cards across all games",amount:10},
+  {id:"margin",icon:"🎯",name:"Absolute Hammering",desc:"Biggest winning margin in a single game",amount:10},
+  {id:"firstgoal",icon:"🚀",name:"Off the Blocks",desc:"Team scores the first goal of the tournament",amount:10},
+  {id:"qualify",icon:"🏆",name:"Top of the Class",desc:"First team to qualify from the group stage",amount:5},
+  {id:"eliminated",icon:"💀",name:"Early Bath",desc:"First team eliminated from the tournament",amount:5},
+];
+
+let state = { players: [], draw: [], prizeWinners: {}, drawDone: false };
+let isAdmin = false;
+let trophyTaps = 0; let trophyTimer = null;
+
+// ---- SUPABASE HELPERS ----
+async function sb(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method==='POST' ? 'resolution=merge-duplicates,return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, opts);
+  if (!r.ok) {
+    const e = await r.text();
+    throw new Error(e);
+  }
+  const txt = await r.text();
+  return txt ? JSON.parse(txt) : null;
+}
+
+async function ensureTables() {
+  // Use RPC to create tables if they don't exist
+  // We'll just try to read and catch errors gracefully
+  // Tables needed: sw_players, sw_draw, sw_prizes
+  try { await sb('sw_players?limit=1'); } catch(e) {
+    // Table doesn't exist — create via SQL API
+    await fetch(`${SUPABASE_URL}/rest/v1/rpc/exec_sql`, {
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`,'Content-Type':'application/json'},
+      body: JSON.stringify({query:`
+        CREATE TABLE IF NOT EXISTS sw_players (id SERIAL PRIMARY KEY, name TEXT, slots INT, start_slot INT, paid BOOLEAN DEFAULT false, created_at TIMESTAMPTZ DEFAULT NOW());
+        CREATE TABLE IF NOT EXISTS sw_draw (id INT PRIMARY KEY DEFAULT 1, draw_data JSONB, done BOOLEAN DEFAULT false);
+        CREATE TABLE IF NOT EXISTS sw_prizes (id TEXT PRIMARY KEY, winner TEXT);
+      `})
+    });
+  }
+}
+
+async function loadState() {
+  try {
+    const [players, drawRow, prizes] = await Promise.all([
+      sb('sw_players?order=start_slot.asc').catch(()=>[]),
+      sb('sw_draw?id=eq.1').catch(()=>[]),
+      sb('sw_prizes').catch(()=>[])
+    ]);
+
+    state.players = (players||[]).map(p=>({
+      id: p.id, name: p.name, slots: p.slots, startSlot: p.start_slot, paid: p.paid
+    }));
+
+    if (drawRow && drawRow.length) {
+      state.draw = drawRow[0].draw_data || [];
+      state.drawDone = drawRow[0].done || false;
+    }
+
+    state.prizeWinners = {};
+    (prizes||[]).forEach(p => { state.prizeWinners[p.id] = p.winner; });
+
+  } catch(e) {
+    console.error('Load error:', e);
+    // Try to create tables via SQL editor approach
+    await createTablesViaSQL();
+  }
+}
+
+async function createTablesViaSQL() {
+  // Try creating tables using postgres function
+  const createSQL = `
+    create table if not exists sw_players (
+      id serial primary key,
+      name text not null,
+      slots int not null default 1,
+      start_slot int not null,
+      paid boolean default false,
+      created_at timestamptz default now()
+    );
+    create table if not exists sw_draw (
+      id int primary key default 1,
+      draw_data jsonb,
+      done boolean default false
+    );
+    create table if not exists sw_prizes (
+      id text primary key,
+      winner text
+    );
+    alter table sw_players enable row level security;
+    alter table sw_draw enable row level security;
+    alter table sw_prizes enable row level security;
+    create policy if not exists "allow all" on sw_players for all using (true) with check (true);
+    create policy if not exists "allow all" on sw_draw for all using (true) with check (true);
+    create policy if not exists "allow all" on sw_prizes for all using (true) with check (true);
+  `;
+  console.log('Tables may need manual creation. See README.');
+}
+
+// ---- ADMIN ----
+function trophyTap() {
+  trophyTaps++;
+  clearTimeout(trophyTimer);
+  trophyTimer = setTimeout(()=>{ trophyTaps=0; }, 1500);
+  if (trophyTaps >= 3) {
+    trophyTaps = 0;
+    document.getElementById('pw-modal').classList.remove('hidden');
+    setTimeout(()=>document.getElementById('pw-input').focus(), 100);
+  }
+}
+
+function checkPw() {
+  const val = document.getElementById('pw-input').value;
+  if (val === ADMIN_PW) {
+    isAdmin = true;
+    closePwModal();
+    showAdminTab();
+    switchTab('admin');
+    flash('Welcome, admin!');
+  } else {
+    document.getElementById('pw-input').value = '';
+    flash('Wrong password');
+  }
+}
+
+function closePwModal() {
+  document.getElementById('pw-modal').classList.add('hidden');
+  document.getElementById('pw-input').value = '';
+}
+
+function showAdminTab() {
+  document.getElementById('tab-admin').classList.remove('hidden');
+}
+
+// ---- PLAYERS ----
+async function addPlayer() {
+  const name = document.getElementById('player-name-input').value.trim();
+  const slots = parseInt(document.getElementById('player-slots-input').value)||1;
+  if (!name) return flash('Enter a name!');
+  const used = state.players.reduce((s,p)=>s+p.slots,0);
+  if (used + slots > 48) return flash(`Only ${48-used} slots left!`);
+  const startSlot = used + 1;
+  try {
+    const res = await sb('sw_players', 'POST', {name, slots, start_slot: startSlot, paid: false});
+    state.players.push({id: res[0].id, name, slots, startSlot, paid: false});
+    document.getElementById('player-name-input').value = '';
+    document.getElementById('player-slots-input').value = '1';
+    renderPlayers();
+    updateHeader();
+    flash(`${name} added — slot${slots>1?'s':''} ${startSlot}${slots>1?'–'+(startSlot+slots-1):''}`);
+  } catch(e) { flash('Error saving — check Supabase tables'); console.error(e); }
+}
+
+async function togglePaid(id) {
+  const p = state.players.find(x=>x.id===id);
+  if (!p) return;
+  p.paid = !p.paid;
+  try {
+    await sb(`sw_players?id=eq.${id}`, 'PATCH', {paid: p.paid});
+    renderPlayers(); updateHeader();
+  } catch(e) { p.paid = !p.paid; flash('Error updating'); }
+}
+
+async function removePlayer(id) {
+  const p = state.players.find(x=>x.id===id);
+  if (!p || !confirm(`Remove ${p.name}?`)) return;
+  try {
+    await sb(`sw_players?id=eq.${id}`, 'DELETE');
+    state.players = state.players.filter(x=>x.id!==id);
+    // Recalculate slot numbers
+    let s = 1;
+    for (const pl of state.players) {
+      if (pl.startSlot !== s) {
+        pl.startSlot = s;
+        await sb(`sw_players?id=eq.${pl.id}`, 'PATCH', {start_slot: s});
+      }
+      s += pl.slots;
+    }
+    renderPlayers(); updateHeader();
+    flash(`${p.name} removed`);
+  } catch(e) { flash('Error removing'); console.error(e); }
+}
+
+function renderPlayers() {
+  const el = document.getElementById('player-list');
+  if (!state.players.length) { el.innerHTML = '<div class="empty-state">No players added yet</div>'; return; }
+  el.innerHTML = state.players.map(p => {
+    const range = p.slots===1 ? `Slot ${p.startSlot}` : `Slots ${p.startSlot}–${p.startSlot+p.slots-1}`;
+    return `<div class="player-row">
+      <span class="slot-badge">#${p.startSlot}</span>
+      <span class="player-name">${p.name}</span>
+      <span class="player-slots-label">${range} · £${p.slots*5}</span>
+      <button class="paid-badge ${p.paid?'paid-yes':'paid-no'}" onclick="togglePaid(${p.id})">${p.paid?'✓ Paid':'✗ Owed'}</button>
+      <button class="btn btn-ghost" style="padding:3px 8px;font-size:11px;" onclick="removePlayer(${p.id})">✕</button>
+    </div>`;
+  }).join('');
+  renderPrizeWinnerInputs();
+}
+
+// ---- DRAW ----
+async function runDraw() {
+  if (state.drawDone && !confirm('Redo the draw? This will reassign all teams.')) return;
+  if (!state.players.length) return flash('Add players first!');
+
+  const indices = Array.from({length:48},(_,i)=>i);
+  for (let i=indices.length-1;i>0;i--) {
+    const j=Math.floor(Math.random()*(i+1));
+    [indices[i],indices[j]]=[indices[j],indices[i]];
+  }
+
+  // Animate drum
+  const drum = document.getElementById('drum-display');
+  let step = 0;
+  const interval = setInterval(()=>{
+    const t = TEAMS[Math.floor(Math.random()*48)];
+    drum.innerHTML = `<div class="drum-team drum-spinning">${t.flag} ${t.name}</div><div class="drum-slot">Drawing...</div>`;
+    step++;
+    if (step > 35) {
+      clearInterval(interval);
+      state.draw = indices;
+      state.drawDone = true;
+      sb('sw_draw', 'POST', {id:1, draw_data: indices, done: true}).catch(console.error);
+      drum.innerHTML = `<div class="drum-team">✅ Done!</div><div class="drum-slot">All 48 teams assigned</div>`;
+      renderDrawGrid();
+      flash('Draw complete!');
+    }
+  }, 80);
+}
+
+async function resetDraw() {
+  if (!confirm('Reset the draw? All team assignments will be cleared.')) return;
+  state.draw = [];
+  state.drawDone = false;
+  try {
+    await sb('sw_draw?id=eq.1', 'PATCH', {draw_data:[], done:false});
+    document.getElementById('drum-display').innerHTML = '<div style="color:var(--muted);font-size:13px;" id="drum-msg">Press Draw to randomly assign teams to slots</div>';
+    renderDrawGrid();
+  } catch(e) { flash('Error resetting'); }
+}
+
+function renderDrawGrid() {
+  const grid = document.getElementById('draw-grid');
+  const btns = document.getElementById('draw-btns');
+  if (isAdmin) btns.style.display = 'flex';
+
+  grid.innerHTML = Array.from({length:48},(_,i)=>{
+    const teamIdx = state.draw[i] !== undefined ? state.draw[i] : null;
+    const team = teamIdx !== null ? TEAMS[teamIdx] : null;
+    const owner = getSlotOwner(i+1);
+    return `<div class="draw-slot ${team?'assigned':''}">
+      <div class="slot-num">#${i+1}</div>
+      ${team
+        ? `<div class="slot-team">${team.flag} ${team.name}</div><div class="slot-owner">${owner||''}</div>`
+        : `<div class="slot-team" style="color:var(--muted)">—</div>`}
+    </div>`;
+  }).join('');
+}
+
+function getSlotOwner(slotNum) {
+  for (const p of state.players) {
+    if (slotNum >= p.startSlot && slotNum < p.startSlot + p.slots) return p.name;
+  }
+  return null;
+}
+
+// ---- PRIZES ----
+function renderPrizes() {
+  document.getElementById('prize-list').innerHTML = PRIZES.map(p=>{
+    const w = state.prizeWinners[p.id]||'';
+    return `<div class="prize-row">
+      <div class="prize-icon">${p.icon}</div>
+      <div class="prize-info">
+        <div class="prize-name">${p.name}</div>
+        <div class="prize-desc">${p.desc}</div>
+        ${w?`<div class="prize-winner-tag">🏅 ${w}</div>`:''}
+      </div>
+      <div class="prize-amount">£${p.amount}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPrizeWinnerInputs() {
+  const el = document.getElementById('prize-winner-inputs');
+  if (!el) return;
+  el.innerHTML = PRIZES.map(p=>{
+    const w = state.prizeWinners[p.id]||'';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <span style="font-size:16px;width:24px;">${p.icon}</span>
+      <span style="flex:1;font-size:12px;color:var(--muted);">${p.name}</span>
+      <input type="text" placeholder="Winner" value="${w}" style="width:130px;flex:none;" onchange="setPrizeWinner('${p.id}',this.value)" />
+    </div>`;
+  }).join('');
+}
+
+async function setPrizeWinner(id, val) {
+  state.prizeWinners[id] = val;
+  try {
+    await sb('sw_prizes', 'POST', {id, winner: val});
+    renderPrizes();
+    renderLivePrizes();
+    renderPublicBoard();
+  } catch(e) { flash('Error saving winner'); }
+}
+
+function renderLivePrizes() {
+  document.getElementById('live-prizes').innerHTML = PRIZES.map(p=>{
+    const w = state.prizeWinners[p.id]||'';
+    return `<div class="prize-row">
+      <div class="prize-icon">${p.icon}</div>
+      <div class="prize-info">
+        <div class="prize-name">${p.name}</div>
+        ${w?`<div class="prize-winner-tag">🏅 ${w}</div>`:`<div class="prize-desc" style="color:var(--muted)">TBC</div>`}
+      </div>
+      <div class="prize-amount">£${p.amount}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---- PUBLIC BOARD ----
+function renderPublicBoard() {
+  const el = document.getElementById('public-list');
+  const collected = state.players.filter(p=>p.paid).reduce((s,p)=>s+p.slots*5,0);
+  document.getElementById('public-collected').textContent = `£${collected}`;
+
+  if (!state.drawDone || !state.players.length) {
+    el.innerHTML = '<div class="empty-state">Draw hasn\'t happened yet — check back soon!</div>';
+    return;
+  }
+
+  el.innerHTML = state.players.map(p=>{
+    const teams = [];
+    for (let s=p.startSlot; s<p.startSlot+p.slots; s++) {
+      const teamIdx = state.draw[s-1];
+      if (teamIdx !== undefined && teamIdx !== null) teams.push(TEAMS[teamIdx]);
+    }
+    const prizes = PRIZES.filter(pr => state.prizeWinners[pr.id] === p.name);
+    return `<div class="lb-card">
+      <div class="lb-name">${p.name} ${prizes.length?'🏅'.repeat(prizes.length):''}</div>
+      <div class="team-chips">
+        ${teams.map(t=>`<span class="team-chip">${t.flag} ${t.name}</span>`).join('')}
+      </div>
+      ${prizes.length?`<div style="margin-top:8px;font-size:11px;color:var(--gold);">${prizes.map(pr=>`${pr.icon} ${pr.name} — £${pr.amount}`).join(' &nbsp;·&nbsp; ')}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ---- HEADER ----
+function updateHeader() {
+  const used = state.players.reduce((s,p)=>s+p.slots,0);
+  const paid = state.players.filter(p=>p.paid).reduce((s,p)=>s+p.slots*5,0);
+  const paidSlots = state.players.filter(p=>p.paid).reduce((s,p)=>s+p.slots,0);
+  const owedSlots = state.players.filter(p=>!p.paid).reduce((s,p)=>s+p.slots,0);
+  document.getElementById('pot-pill').textContent = `Pot: £${paid}`;
+  document.getElementById('slots-pill').textContent = `${used}/48 slots sold`;
+  document.getElementById('players-pill').textContent = `${state.players.length} players`;
+  const sp = document.getElementById('stat-pot'); if(sp) sp.textContent = `£${paid}`;
+  const spd = document.getElementById('stat-paid'); if(spd) spd.textContent = paidSlots;
+  const so = document.getElementById('stat-owed'); if(so) so.textContent = owedSlots;
+}
+
+// ---- TABS ----
+function switchTab(tab) {
+  const tabs = ['admin','draw','prizes','live','public'];
+  tabs.forEach(t=>{
+    const tb = document.getElementById('tab-'+t);
+    const pn = document.getElementById('panel-'+t);
+    if (!tb||!pn) return;
+    tb.classList.toggle('active', t===tab);
+    pn.classList.toggle('active', t===tab);
+    pn.classList.toggle('hidden', t!==tab && (t==='admin'&&!isAdmin));
+    if (t!==tab) pn.classList.remove('active');
+  });
+  document.getElementById(`panel-${tab}`).classList.add('active');
+  if (tab==='draw') renderDrawGrid();
+  if (tab==='prizes') renderPrizes();
+  if (tab==='live') renderLivePrizes();
+  if (tab==='public') renderPublicBoard();
+}
+
+// ---- TOAST ----
+function flash(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 2600);
+}
+
+// ---- INIT ----
+async function init() {
+  await loadState();
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  renderPlayers();
+  renderPrizes();
+  renderLivePrizes();
+  renderPublicBoard();
+  renderDrawGrid();
+  updateHeader();
+  switchTab('public');
+  // Auto-refresh every 60 seconds
+  setInterval(async ()=>{
+    await loadState();
+    renderPublicBoard();
+    renderLivePrizes();
+    updateHeader();
+    if (document.getElementById('panel-draw').classList.contains('active')) renderDrawGrid();
+  }, 60000);
+}
+
+init();
+</script>
+</body>
+</html>
